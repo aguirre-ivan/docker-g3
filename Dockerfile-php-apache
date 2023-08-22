@@ -1,0 +1,63 @@
+FROM php:7.4.33-apache
+
+RUN apt-get update && \
+    apt upgrade --yes
+
+RUN apt-get update && \
+    apt-get install --yes \
+    cron g++ gettext libicu-dev openssl \
+    libc-client-dev libkrb5-dev  \
+    libxml2-dev libfreetype6-dev \
+    libgd-dev libmcrypt-dev bzip2 \
+    libpng-dev libjpeg-dev libonig-dev \
+    libbz2-dev libtidy-dev libcurl4-openssl-dev \
+    libz-dev libmemcached-dev libxslt-dev git-core libpq-dev \
+    libzip4 libzip-dev libwebp-dev libsodium-dev 
+
+# Pcntl docker-ext
+COPY ./config/docker-php-ext-pcntl.ini /usr/local/etc/php/conf.d/.
+
+# PHP extensions
+RUN docker-php-ext-install \
+    gd curl mbstring xml zip json opcache pgsql sodium pcntl
+
+# PDO
+RUN docker-php-ext-install \
+    pdo pdo_pgsql
+
+# Apcu extension
+RUN printf "no" | pecl install apcu && \
+    docker-php-ext-enable apcu
+
+# Extra extensions
+RUN apt-get update && \
+    apt-get install --yes \
+    git vim unzip
+
+# Composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/bin/composer
+
+# Subversion
+RUN apt-get update && \
+    apt-get install subversion --yes
+
+# Graphviz
+RUN apt-get update && \
+    apt-get install graphviz --yes
+
+# Java
+RUN apt-get update && \
+    apt-get install default-jdk --yes
+
+# Apache Configuration
+RUN a2enmod rewrite
+RUN a2enmod setenvif
+
+WORKDIR /usr/local/proyectos/guarani
+
+# npm & yarn
+RUN apt-get update && \
+    apt-get install --yes \
+    nodejs npm && \
+    npm install --global yarn --yes
