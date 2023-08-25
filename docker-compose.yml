@@ -1,0 +1,38 @@
+version: '3.21'
+
+services:
+  postgres:
+    image: postgres:11.6-alpine
+    container_name: ${POSTGRES_CONTAINER}
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - ./init/postgres:/docker-entrypoint-initdb.d
+      - ./pg_data:/var/lib/mysql
+    networks:
+      guarani-network:
+        aliases: 
+          - postgres
+
+  php-apache-server:
+    container_name: ${APACHE_CONTAINER}
+    build:
+      dockerfile: Dockerfile-php-apache
+    volumes:
+      - ./guarani:/usr/local/proyectos/guarani
+    ports:
+      - 80:80
+    links:
+      - postgres:postgres
+    networks:
+      guarani-network:
+        aliases:
+          - php-apache
+
+networks:
+  guarani-network:
+    name: guarani-net
+    driver: bridge
+    ipam:
+      driver: default
