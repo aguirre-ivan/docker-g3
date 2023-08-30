@@ -55,15 +55,3 @@ echo "-- Permisos configurados"
 echo "-- Instalando guarani"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./guarani instalar"
 echo "-- Guarani instalado"
-
-# docker exec -it $APACHE_CONTAINER bash -c "echo '
-# [desarrollo guarani guarani]
-# motor = "postgres7"
-# profile = "postgres"
-# usuario = "postgres"
-# clave = "123456"
-# base = "toba_3_3"
-# puerto = "5432"
-# encoding = "LATIN1"
-# schema = "negocio"
-# ' >> instalacion/bases.ini"
