@@ -21,6 +21,7 @@ services:
       dockerfile: Dockerfile-php-apache
     volumes:
       - ./guarani:/usr/local/proyectos/guarani
+      - ./config/toba_3_3.conf:/etc/apache2/sites-available/toba_3_3.conf
     ports:
       - 80:80
     links:
