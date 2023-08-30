@@ -24,5 +24,6 @@ sudo ./uninstall_g3.sh
 
 ## Uso
 
-[guarani/](http://localhost/)
-[toba editor/](http://localhost/toba_editor/3.3)
+- [guarani/](http://localhost/)
+
+- [toba editor/](http://localhost/toba_editor/3.3)
