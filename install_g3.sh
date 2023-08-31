@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -f ".env" ]; then # scrip executed from repository root
+if [ -f ".env" ]; then
     source .env
 fi
 

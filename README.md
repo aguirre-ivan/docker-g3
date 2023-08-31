@@ -22,6 +22,12 @@ Para volver a instalar (elimina volumenes y svn de guarani)
 sudo ./uninstall_g3.sh
 ```
 
+## Correr comandos en container
+
+```bash
+./docker_exec.sh [comando]
+```
+
 ## Uso
 
 - [guarani/](http://localhost/)
