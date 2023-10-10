@@ -16,6 +16,22 @@ echo "-- Ejecutando 'composer install'"
 docker exec -i $APACHE_CONTAINER composer install --no-interaction --optimize-autoloader
 echo "-- 'composer install' finalizado"
 
+DUMP_DIR="$PWD/init"
+FILE_DUMP=$(ls -1 "$DUMP_DIR" | head -n 1)
+
+echo "-- Cargando dump de base (si existe)"
+if [ -n "$FILE_DUMP" ]; then
+    FILE_DUMP="$DUMP_DIR/$FILE_DUMP"
+    echo "-- Cargando el primer archivo de dump: $FILE_DUMP"
+    docker exec -i $POSTGRES_CONTAINER dropdb -U $POSTGRES_USER -h localhost -p 5432 $POSTGRES_DB
+    docker exec -i $POSTGRES_CONTAINER createdb -U $POSTGRES_USER -h localhost -p 5432 $POSTGRES_DB
+
+    docker exec -i $POSTGRES_CONTAINER psql -d $POSTGRES_DB -U $POSTGRES_USER < "$FILE_DUMP"
+    echo "-- Dump cargado"
+else
+    echo "-- No se encontraron archivos de dump en $DUMP_DIR. No se realizó la carga."
+fi
+
 echo "-- Instalando framework toba"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTANCIA=desarrollo"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTALACION_DIR=/instalacion"
@@ -55,3 +71,4 @@ echo "-- Permisos configurados"
 echo "-- Instalando guarani"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./guarani instalar"
 echo "-- Guarani instalado"
+
