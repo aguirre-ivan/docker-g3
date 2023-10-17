@@ -34,19 +34,21 @@ fi
 
 echo "-- Instalando framework toba"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTANCIA=desarrollo"
-docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTALACION_DIR=${GUARANI_INSTALATION_DIR}
-instalacion"
+docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTALACION_DIR=${GUARANI_INSTALATION_DIR}instalacion"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./toba instalacion instalar"
 echo "-- Framework toba instalado"
 
 echo "-- Configurando permisos"
-docker exec -it $APACHE_CONTAINER bash -c "chown -R www-data:www-data www temp instalacion vendor/siu-toba/framework/www vendor/siu-toba/framework/temp /etc/apache2/sites-available/toba_3_3.conf"
+docker exec -it $APACHE_CONTAINER bash -c "chown -R www-data:www-data www temp instalacion vendor/siu-toba/framework/www vendor/siu-toba/framework/temp ${TOBA_CONF_DIR}"
 docker exec -it $APACHE_CONTAINER bash -c "chmod 775 -R www temp instalacion vendor/siu-toba/framework/www vendor/siu-toba/framework/temp"
 echo "-- Permisos configurados"
 
 echo "-- Levantando configuracion de sitio"
 docker exec -it $APACHE_CONTAINER bash -c "a2dissite 000-default.conf"
 docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"
+# Se usa config de config/toba_3_3.conf
+# docker exec -it $APACHE_CONTAINER bash -c "ln -s ${GUARANI_INSTALATION_DIR}instalacion/toba.conf /etc/apache2/sites-available/gestion.conf"
+# docker exec -it $APACHE_CONTAINER bash -c "a2ensite gestion.conf"
 docker exec -it $APACHE_CONTAINER bash -c "a2ensite toba_3_3.conf"
 docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"  
 echo "-- Configuracion ok"
@@ -65,11 +67,10 @@ docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"
 echo "--"
 
 echo "-- Configurando permisos"
-docker exec -it $APACHE_CONTAINER bash -c "chown -R www-data:www-data www temp instalacion vendor/siu-toba/framework/www vendor/siu-toba/framework/temp /etc/apache2/sites-available/toba_3_3.conf"
+docker exec -it $APACHE_CONTAINER bash -c "chown -R www-data:www-data www temp instalacion vendor/siu-toba/framework/www vendor/siu-toba/framework/temp ${TOBA_CONF_DIR}"
 docker exec -it $APACHE_CONTAINER bash -c "chmod 775 -R www temp instalacion vendor/siu-toba/framework/www vendor/siu-toba/framework/temp"
 echo "-- Permisos configurados"
 
 echo "-- Instalando guarani"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./guarani instalar"
 echo "-- Guarani instalado"
-
