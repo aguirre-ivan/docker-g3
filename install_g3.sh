@@ -34,7 +34,8 @@ fi
 
 echo "-- Instalando framework toba"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTANCIA=desarrollo"
-docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTALACION_DIR=/instalacion"
+docker exec -it $APACHE_CONTAINER bash -c "cd bin && export TOBA_INSTALACION_DIR=${GUARANI_INSTALATION_DIR}
+instalacion"
 docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./toba instalacion instalar"
 echo "-- Framework toba instalado"
 
@@ -44,22 +45,22 @@ docker exec -it $APACHE_CONTAINER bash -c "chmod 775 -R www temp instalacion ven
 echo "-- Permisos configurados"
 
 echo "-- Levantando configuracion de sitio"
-docker exec -it $APACHE_CONTAINER bash -c "a2dissite default.conf"
+docker exec -it $APACHE_CONTAINER bash -c "a2dissite 000-default.conf"
 docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"
 docker exec -it $APACHE_CONTAINER bash -c "a2ensite toba_3_3.conf"
-docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"
+docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"  
 echo "-- Configuracion ok"
 
 echo "-- Agregar los parámetros de localización de fop"
 docker exec -it $APACHE_CONTAINER bash -c "echo '
 [xslfo]
-fop=/usr/local/proyectos/guarani/php/3ros/fop/fop
+fop=${GUARANI_INSTALATION_DIR}php/3ros/fop/fop
 ' >> instalacion/instalacion.ini"
 echo "-- Parametros agregados"
 
 echo "--"
 docker exec -it $APACHE_CONTAINER bash -c "cp menu.ini.tmpl menu.ini"
-docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./guarani cargar -d /usr/local/proyectos/guarani/"
+docker exec -it $APACHE_CONTAINER bash -c "cd bin && ./guarani cargar -d ${GUARANI_INSTALATION_DIR}"
 docker exec -it $APACHE_CONTAINER bash -c "service apache2 reload"
 echo "--"
 
