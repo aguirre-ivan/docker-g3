@@ -12,7 +12,22 @@ RUN apt-get update && \
     libpng-dev libjpeg-dev libonig-dev \
     libbz2-dev libtidy-dev libcurl4-openssl-dev \
     libz-dev libmemcached-dev libxslt-dev git-core libpq-dev \
-    libzip4 libzip-dev libwebp-dev libsodium-dev 
+    libzip4 libzip-dev libwebp-dev libsodium-dev \
+    locales
+
+# Set locales
+RUN sed -i -e 's/# es_AR.UTF-8 UTF-8/es_AR.UTF-8 UTF-8/' /etc/locale.gen
+
+RUN dpkg-reconfigure --frontend=noninteractive locales
+
+ENV LC_ALL es_AR.UTF-8
+ENV LANG es_AR.UTF-8
+ENV LANGUAGE es_AR.UTF-8
+
+# Set timezone
+RUN rm /etc/localtime
+RUN echo "America/Argentina/Buenos_Aires" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+RUN "date"
 
 # Pcntl docker-ext
 COPY ./config/docker-php-ext-pcntl.ini /usr/local/etc/php/conf.d/.
@@ -54,10 +69,11 @@ RUN apt-get update && \
 RUN a2enmod rewrite
 RUN a2enmod setenvif
 
-WORKDIR /usr/local/proyectos/guarani
+WORKDIR /usr/local/proyectos/
 
-# npm & yarn
+# npm, yarn & yui-compressor
 RUN apt-get update && \
     apt-get install --yes \
     nodejs npm && \
-    npm install --global yarn --yes
+    npm install --global yarn --yes && \
+    npm install --global yuicompressor --yes

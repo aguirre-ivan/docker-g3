@@ -4,8 +4,12 @@ if [ -f ".env" ]; then
     source .env
 fi
 
-echo "-- Clonando svn"
+echo "-- Clonando svn de guarani"
 svn checkout https://colab.siu.edu.ar/svn/guarani3/nodos/$SIGLAS_INSTITUCION/gestion/trunk/$G_VERSION guarani
+echo "-- svn clonado"
+
+echo "-- Clonando svn de autogestion"
+svn checkout http://colab.siu.edu.ar/svn/guarani3/nodos/$SIGLAS_INSTITUCION/3w/trunk/$G_VERSION g3w3
 echo "-- svn clonado"
 
 echo "-- Levantando contenedores"

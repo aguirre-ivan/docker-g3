@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
-      - ./pg_data:/var/lib/mysql
+      - ./pg_data:/var/lib/postgresql
     networks:
       guarani-network:
         aliases: 
@@ -20,8 +20,12 @@ services:
       dockerfile: Dockerfile-php-apache
     volumes:
       - ./guarani:/usr/local/proyectos/guarani
-      - ./config/toba_3_3.conf:/etc/apache2/sites-available/toba_3_3.conf
+      - ./g3w3:/usr/local/proyectos/g3w3
+      - ./config/sites-available/toba_3_3.conf:/etc/apache2/sites-available/toba_3_3.conf
+      - ./config/sites-available/alias.conf:/etc/apache2/sites-available/alias.conf
+      - ./config/php.ini:/usr/local/etc/php/php.ini
     ports:
+      - 8081:8081
       - 80:80
     links:
       - postgres:postgres
